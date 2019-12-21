@@ -1,46 +1,64 @@
 import React, { Component } from 'react'
 import NotefulForm from '../NotefulForm/NotefulForm'
-import ApiContext from '../ApiContext'
-import config from '../config'
 import './AddNote.css'
 import PropTypes from 'prop-types';
 
-export default class AddNote extends Component {
-  static defaultProps = {
-    history: {
-      push: () => { }
-    },
-  }
-  static contextType = ApiContext;
-
-  handleSubmit = e => {
-    e.preventDefault()
-    const newNote = {
-      name: e.target['note-name'].value,
-      content: e.target['note-content'].value,
-      folderId: e.target['note-folder-id'].value,
-      modified: new Date(),
+class AddNote extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        name: {
+            value: '',
+            touched: false
+        }
     }
-    fetch(`${config.API_ENDPOINT}/notes`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(newNote),
-    })
-      .then(res => {
-        if (!res.ok)
-          return res.json().then(e => Promise.reject(e))
-        return res.json()
-      })
-      .then(note => {
-        this.context.addNote(note)
-        this.props.history.push(`/folder/${note.folderId}`)
-      })
-      .catch(error => {
-        console.error({ error })
-      })
+}
+updateName(name) {
+    this.setState({
+        name: {
+            value: name,
+            touched: true
+        }
+    });
+}
+handleSubmit(event) {
+    event.preventDefault();
+    const {name} = this.state;
+    console.log('Name: ', name.value);
+    const url ='http://localhost:9090/notes'
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(name),
+        headers: {
+        }
+    };
+
+    fetch(url, options)
+  .then(res => {
+    if(!res.ok) {
+      throw new Error('Something went wrong, please try again later');
+    }
+    return res.json();
+  })
+  .then(data => {
+    this.props.handleAdd(name);
+  })
+  .catch(err => {
+    this.setState({
+      error: err.message
+    });
+  });
+}
+validateName() {
+    console.log(this.state.name)
+    const name = this.state.name.value.trim();
+    if (name.length === 0) {
+      return 'Name is required';
+    } else if (name.length < 3) {
+      return 'Name must be at least 3 characters long';
+    }
   }
+
 
   render() {
     const { folders=[] } = this.context
@@ -83,6 +101,9 @@ export default class AddNote extends Component {
     )
   }
 }
+
+export default AddNote;
+
 AddNote.propTypes = {
   value: PropTypes.string.isRequired
 };

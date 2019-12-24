@@ -23,7 +23,7 @@ class AddFolder extends Component {
         });
     }
     
-    handleSubmit(event) {
+    handleSubmit = event => {
         event.preventDefault();
         const {name} = this.state;
         console.log('Name: ', name.value);

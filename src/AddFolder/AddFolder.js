@@ -3,8 +3,11 @@ import NotefulForm from '../NotefulForm/NotefulForm'
 import './AddFolder.css'
 import PropTypes from 'prop-types';
 import ValidationError from '../ValidationError';
+import ApiContext from '../ApiContext';
 
 class AddFolder extends Component {
+    static contextType = ApiContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -23,19 +26,23 @@ class AddFolder extends Component {
         });
     }
     
-    handleSubmit = event => {
-        event.preventDefault();
-        const {name} = this.state;
-        console.log('Name: ', name.value);
-        const url ='http://localhost:9090/folders'
+    handleSubmit = e => {
+        e.preventDefault();
+        const { name } = e.target.value
+        const folder = {
+          name: name.value,
+        }
+        const url = 'http://localhost:9090/folders';
         const options = {
             method: 'POST',
-            body: JSON.stringify(name),
+            body: JSON.stringify(folder),
             headers: {
+              'content-type': 'application/json',
             }
         };
 
         fetch(url, options)
+
       .then(res => {
         if(!res.ok) {
           throw new Error('Something went wrong, please try again later');
@@ -43,8 +50,10 @@ class AddFolder extends Component {
         return res.json();
       })
       .then(data => {
-        console.log(this.state.name);
-        this.props.handleAdd(this.state.name.value);
+        name.value = ''
+        console.log(name.value);
+        this.context.handleAdd(data);
+        this.props.history.push('/');
       })
       .catch(err => {
         this.setState({

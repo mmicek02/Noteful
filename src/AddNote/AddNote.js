@@ -2,8 +2,12 @@ import React, { Component } from 'react'
 import NotefulForm from '../NotefulForm/NotefulForm'
 import './AddNote.css'
 import PropTypes from 'prop-types';
+import ApiContext from '../ApiContext';
+import ValidationError from '../ValidationError';
 
 class AddNote extends Component {
+  static contextType = ApiContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -21,10 +25,10 @@ updateName(name) {
         }
     });
 }
-handleSubmit = event => {
-    event.preventDefault();
-    const {name} = this.state;
-    console.log('Name: ', name.value);
+handleSubmit = e => {
+    e.preventDefault();
+    const { name } = e.target;
+    console.log('Name: ', e.target.value);
     const url ='http://localhost:9090/notes'
     const options = {
         method: 'POST',
@@ -62,6 +66,7 @@ validateName() {
 
   render() {
     const { folders=[] } = this.context
+    const nameError = this.validateName();
     return (
       <section className='AddNote'>
         <h2>Create a note</h2>
@@ -70,7 +75,12 @@ validateName() {
             <label htmlFor='note-name-input'>
               Name
             </label>
-            <input type='text' id='note-name-input' name='note-name' />
+            <input 
+              type='text' 
+              id='note-name-input' 
+              name='note-name' 
+              onChange={e => this.updateName(e.target.value)}/>
+              {this.state.name.touched && <ValidationError message={nameError} />}
           </div>
           <div className='field'>
             <label htmlFor='note-content-input'>

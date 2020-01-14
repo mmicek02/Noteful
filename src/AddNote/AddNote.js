@@ -11,58 +11,73 @@ class AddNote extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        name: {
-            value: '',
-            touched: false
-        }
+      id: '',
+      title: ' ',
+      date_modified: '',
+      folder_id: '',
+      content: '',
+      touched: false,
     }
-}
-updateName(name) {
+  }
+
+  updateNoteContent = (noteContent) =>{
     this.setState({
-        name: {
-            value: name,
-            touched: true
-        }
-    });
-}
-handleSubmit = e => {
+      content: noteContent,
+      touched: true
+    })
+  }
+  updateNoteTitle = (noteTitle) =>{
+    this.setState({
+      title: noteTitle,
+      touched: true
+    })
+  }
+  updateFolderId = (folder_id) =>{
+    this.setState({
+      folder_id: folder_id,
+      touched: true
+    })
+  }
+  
+  handleSubmit = e => {
     e.preventDefault();
-    const { name } = e.target;
-    console.log('Name: ', e.target.value);
+
+    const noteInfo = {
+      title: this.state.title,
+      folder_id: this.state.folder_id,
+      content: this.state.content,
+    }
+
     const url ='http://localhost:9090/notes'
     const options = {
         method: 'POST',
-        body: JSON.stringify(name),
+        body: JSON.stringify(noteInfo),
         headers: {
         }
     };
-
     fetch(url, options)
-  .then(res => {
-    if(!res.ok) {
-      throw new Error('Something went wrong, please try again later');
-    }
-    return res.json();
-  })
-  .then(data => {
-    this.props.handleAdd(name);
-  })
-  .catch(err => {
-    this.setState({
-      error: err.message
-    });
-  });
-}
-validateName() {
+  
+    .then(res => {
+      if(!res.ok) {
+        throw new Error('Something went wrong, please try again later');
+      }
+      return res.json();
+    })
+    .then(resJson => {
+      this.context.notes.push(resJson)
+      this.props.history.push(`/folder/${noteInfo.folder_id}`) 
+    })
+  }
+
+  validateName() {
     console.log(this.state.name)
-    const name = this.state.name.value.trim();
+    const name = this.state.title;
     if (name.length === 0) {
       return 'Name is required';
     } else if (name.length < 3) {
       return 'Name must be at least 3 characters long';
     }
   }
-
 
   render() {
     const { folders=[] } = this.context
@@ -78,27 +93,30 @@ validateName() {
             <input 
               type='text' 
               id='note-name-input' 
+              placeholder="note title here" 
               name='note-name' 
-              onChange={e => this.updateName(e.target.value)}/>
-              {this.state.name.touched && <ValidationError message={nameError} />}
+              onChange={e => this.updateNoteTitle(e.target.value)}/>
+              {this.state.title.touched && <ValidationError message={nameError} />}
           </div>
           <div className='field'>
             <label htmlFor='note-content-input'>
               Content
             </label>
-            <textarea id='note-content-input' name='note-content' />
+            <input 
+              id='note-content-input' 
+              name='note-content' 
+              placeholder="words go here" 
+              onChange={e => this.updateNoteContent(e.target.value)}/>
           </div>
           <div className='field'>
             <label htmlFor='note-folder-select'>
               Folder
             </label>
-            <select id='note-folder-select' name='note-folder-id'>
-              <option value={null}>...</option>
-              {folders.map(folder =>
-                <option key={folder.id} value={folder.id}>
-                  {folder.name}
-                </option>
-              )}
+            <select id='note-folder-select' name='note-folder-id' onChange={e => this.updateFolderId(e.target.value)}>
+              <option value="">select folder</option>
+                {this.context.folders.map(folderName =>
+                  <option key={folderName.id} value={folderName.id}>{folderName.name}</option>
+                )}
             </select>
           </div>
           <div className='buttons'>

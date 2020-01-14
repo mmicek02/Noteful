@@ -11,68 +11,64 @@ class AddFolder extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: {
+            folderName: {
                 value: '',
                 touched: false
             }
         }
     }
-    updateName(name) {
+
+    updateFolderName(folderName) {
         this.setState({
-            name: {
-                value: name,
-                touched: true
-            }
+          folderName: {
+            value: folderName,
+            touched: true
+          }
         });
     }
     
     handleSubmit = e => {
         e.preventDefault();
-        const { name } = e.target.value
-        const folder = {
-          name: name.value,
+        const folderInfo = {
+          name: this.state.folderName.value
         }
         const url = 'http://localhost:9090/folders';
         const options = {
             method: 'POST',
-            body: JSON.stringify(folder),
             headers: {
               'content-type': 'application/json',
-            }
+            },
+            body: JSON.stringify(folderInfo),
         };
-
         fetch(url, options)
 
-      .then(res => {
+    .then(res => {
         if(!res.ok) {
           throw new Error('Something went wrong, please try again later');
         }
         return res.json();
       })
-      .then(data => {
-        name.value = ''
-        console.log(name.value);
-        this.context.handleAdd(data);
-        this.props.history.push('/');
-      })
-      .catch(err => {
-        this.setState({
-          error: err.message
-        });
-      });
-
-    }
+    .then(resJson => {
+        this.context.folders.push(resJson) //push into context, since API only updates context on componentDidMount
+        this.props.history.push(`/folder/${resJson.id}`)
+    })
+    .catch(error => {
+      alert(error);
+      this.props.history.push('/');
+    })
+}
     validateName() {
-      console.log(this.state.name);
-      console.log(this.state.name.value);
-      console.log(this.state.name.value.trim());  
-      const name = this.state.name.value.trim();
+      console.log(this.state.folderName);
+      console.log(this.state.folderName.value);
+      console.log(this.state.folderName.value.trim());  
+      const name = this.state.folderName.value.trim();
         if (name.length === 0) {
           return 'Name is required';
         } else if (name.length < 3) {
           return 'Name must be at least 3 characters long';
         }
       }
+
   render() {
     const nameError = this.validateName();
     return (
@@ -87,11 +83,11 @@ class AddFolder extends Component {
               type='text' 
               id='folder-name-input' 
               name='folder-name' 
-              onChange={e => this.updateName(e.target.value)}/>
-              {this.state.name.touched && <ValidationError message={nameError} />}
+              onChange={e => this.updateFolderName(e.target.value)}/>
+              {this.state.folderName.touched && <ValidationError message={nameError} />}
           </div>
           <div className='buttons'>
-            <button type='submit'>
+            <button type='submit' onClick={e => this.handleSubmit(e)}>
               Add folder
             </button>
           </div>

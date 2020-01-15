@@ -12,8 +12,8 @@ class AddNote extends Component {
     super(props);
     this.state = {
       id: '',
-      title: ' ',
-      date_modified: '',
+      name: ' ',
+      modified: '',
       folder_id: '',
       content: '',
       touched: false,
@@ -27,7 +27,7 @@ class AddNote extends Component {
   }
   updateNoteTitle = (noteTitle) =>{
     this.setState({
-      title: noteTitle,
+      name: noteTitle,
       touched: true
     })
   }
@@ -41,12 +41,12 @@ class AddNote extends Component {
     e.preventDefault();
 
     const noteInfo = {
-      title: this.state.title,
+      title: this.state.name,
       folder_id: this.state.folder_id,
       content: this.state.content,
     }
 
-    const url ='http://localhost:9090/notes/'
+    const url ='http://localhost:9090/notes'
     const options = {
         method: 'POST',
         headers: {
@@ -70,8 +70,8 @@ class AddNote extends Component {
   }
 
   validateName() {
-    console.log(this.state.title)
-    const name = this.state.title;
+    console.log(this.state.name)
+    const name = this.state.name;
     if (name.length === 0) {
       return 'Name is required';
     } else if (name.length < 3) {
@@ -95,7 +95,7 @@ class AddNote extends Component {
               placeholder="Note title" 
               name='note-name' 
               onChange={e => this.updateNoteTitle(e.target.value)}/>
-              {this.state.title.touched && <ValidationError message={nameError} />}
+              {this.state.name.touched && <ValidationError message={nameError} />}
           </div>
           <div className='field'>
             <label htmlFor='note-content-input'>
@@ -130,7 +130,3 @@ class AddNote extends Component {
 }
 
 export default AddNote;
-
-AddNote.propTypes = {
-  value: PropTypes.string.isRequired
-};

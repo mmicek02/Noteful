@@ -96,9 +96,6 @@ class AddFolder extends Component {
     )
   }
 }
-AddFolder.propTypes = {
-  value: PropTypes.string.isRequired
-};
 
 export default AddFolder;
 

@@ -17,24 +17,26 @@ export default class NoteListMain extends React.Component {
   static contextType = ApiContext
 
   render() {
-    const { folder_id } = this.props.match.params /*finds the :folder_id in the URL thru match (whos only parametre is the folderid), and makes it a variable for us to use later*/
+    const { folderId } = this.props.match.params /*finds the :folder_id in the URL thru match (whos only parametre is the folderid), and makes it a variable for us to use later*/
     const { notes } = this.context 
-    const notesForFolder = getNotesForFolder(notes, folder_id)
+    const notesForFolder = getNotesForFolder(notes, folderId)
     return (
       <section className='NoteListMain'>
         <ul>
-          {notesForFolder.map(note =>    /*using the previously filtered note-list, make a new array of notes as decided by the folder_id scraped earlier*/
+          {notesForFolder.map(note =>   { /*using the previously filtered note-list, make a new array of notes as decided by the folder_id scraped earlier*/
+            console.log(note);
+            return (
             <ErrorBoundary key={note.id}>
               <li key={note.id}>
                 <Note /*creates the note cards */
                   key={note.id}
                   id={note.id}
-                  title={note.title}
-                  folder_id={note.folder_id}
-                  date_modified={note.date_modified}
+                  title={note.name}
+                  folder_id={note.folderId}
+                  date_modified={note.modified}
                 />
               </li>
-            </ErrorBoundary>
+            </ErrorBoundary>) }
           )}
         </ul>
         <div className='NoteListMain__button-container'>

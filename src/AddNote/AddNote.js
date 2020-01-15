@@ -22,8 +22,7 @@ class AddNote extends Component {
 
   updateNoteContent = (noteContent) =>{
     this.setState({
-      content: noteContent,
-      touched: true
+      content: noteContent
     })
   }
   updateNoteTitle = (noteTitle) =>{
@@ -34,8 +33,7 @@ class AddNote extends Component {
   }
   updateFolderId = (folder_id) =>{
     this.setState({
-      folder_id: folder_id,
-      touched: true
+      folder_id: folder_id
     })
   }
   
@@ -48,13 +46,15 @@ class AddNote extends Component {
       content: this.state.content,
     }
 
-    const url ='http://localhost:9090/notes'
+    const url ='http://localhost:9090/notes/'
     const options = {
         method: 'POST',
-        body: JSON.stringify(noteInfo),
         headers: {
-        }
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(noteInfo)
     };
+
     fetch(url, options)
   
     .then(res => {
@@ -70,7 +70,7 @@ class AddNote extends Component {
   }
 
   validateName() {
-    console.log(this.state.name)
+    console.log(this.state.title)
     const name = this.state.title;
     if (name.length === 0) {
       return 'Name is required';
@@ -80,7 +80,6 @@ class AddNote extends Component {
   }
 
   render() {
-    const { folders=[] } = this.context
     const nameError = this.validateName();
     return (
       <section className='AddNote'>
@@ -93,7 +92,7 @@ class AddNote extends Component {
             <input 
               type='text' 
               id='note-name-input' 
-              placeholder="note title here" 
+              placeholder="Note title" 
               name='note-name' 
               onChange={e => this.updateNoteTitle(e.target.value)}/>
               {this.state.title.touched && <ValidationError message={nameError} />}
@@ -105,7 +104,7 @@ class AddNote extends Component {
             <input 
               id='note-content-input' 
               name='note-content' 
-              placeholder="words go here" 
+              placeholder="Add content" 
               onChange={e => this.updateNoteContent(e.target.value)}/>
           </div>
           <div className='field'>
@@ -113,14 +112,14 @@ class AddNote extends Component {
               Folder
             </label>
             <select id='note-folder-select' name='note-folder-id' onChange={e => this.updateFolderId(e.target.value)}>
-              <option value="">select folder</option>
+              <option value="">Select folder</option>
                 {this.context.folders.map(folderName =>
                   <option key={folderName.id} value={folderName.id}>{folderName.name}</option>
                 )}
             </select>
           </div>
           <div className='buttons'>
-            <button type='submit'>
+            <button type='submit' onClick={e => this.handleSubmit(e)}>
               Add note
             </button>
           </div>

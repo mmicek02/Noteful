@@ -22,12 +22,12 @@ export default class NotePageMain extends React.Component {
     const note = findNote(notes, note_id) || { content: '' }
     return (
       <section className='NotePageMain'>
-        <Note
+        {/* <Note
           id={note.id}
           name={note.name}
           modified={note.modified}
           onDeleteNote={this.handleDeleteNote}
-        />
+        /> */}
         <div className='NotePageMain__content'>
           {note.content.split(/\n \r|\n/).map((para, i) =>
             <p key={i}>{para}</p>

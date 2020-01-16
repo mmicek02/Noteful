@@ -14,7 +14,7 @@ class AddNote extends Component {
       id: '',
       name: '',
       modified: '',
-      folder_id: '',
+      folderId: '',
       content: '',
       touched: false,
     }
@@ -27,7 +27,7 @@ class AddNote extends Component {
   }
   updateNoteTitle = (noteTitle) =>{
     this.setState({
-      title: noteTitle,
+      name: noteTitle,
       touched: true
     })
   }

@@ -12,7 +12,7 @@ class AddNote extends Component {
     super(props);
     this.state = {
       id: '',
-      name: ' ',
+      name: '',
       modified: '',
       folder_id: '',
       content: '',
@@ -27,13 +27,13 @@ class AddNote extends Component {
   }
   updateNoteTitle = (noteTitle) =>{
     this.setState({
-      name: noteTitle,
+      title: noteTitle,
       touched: true
     })
   }
-  updateFolderId = (folder_id) =>{
+  updateFolderId = (folderId) =>{
     this.setState({
-      folder_id: folder_id
+      folderId: folderId
     })
   }
   
@@ -41,9 +41,10 @@ class AddNote extends Component {
     e.preventDefault();
 
     const noteInfo = {
-      title: this.state.name,
-      folder_id: this.state.folder_id,
+      name: this.state.name,
+      folderId: this.state.folderId,
       content: this.state.content,
+      modified: new Date,
     }
 
     const url ='http://localhost:9090/notes'
@@ -65,7 +66,7 @@ class AddNote extends Component {
     })
     .then(resJson => {
       this.context.notes.push(resJson)
-      this.props.history.push(`/folder/${noteInfo.folderId}`) 
+      this.props.history.push(`/folder/${noteInfo.folder_id}`) 
     })
   }
 

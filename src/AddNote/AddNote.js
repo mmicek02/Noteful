@@ -65,7 +65,7 @@ class AddNote extends Component {
     })
     .then(resJson => {
       this.context.notes.push(resJson)
-      this.props.history.push(`/folder/${noteInfo.folder_id}`) 
+      this.props.history.push(`/folder/${noteInfo.folderId}`) 
     })
   }
 

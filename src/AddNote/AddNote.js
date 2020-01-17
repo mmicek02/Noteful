@@ -120,7 +120,13 @@ class AddNote extends Component {
             </select>
           </div>
           <div className='buttons'>
-            <button type='submit' onClick={e => this.handleSubmit(e)}>
+            <button 
+              type='submit' 
+              onClick={e => this.handleSubmit(e)}
+              disabled = {
+                this.validateName()
+              }
+            >
               Add note
             </button>
           </div>

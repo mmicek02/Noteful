@@ -90,6 +90,9 @@ class AddFolder extends Component {
             <button 
               type='submit' 
               onClick={e => this.handleSubmit(e)}
+              disabled = {
+                this.validateName()
+              }
             >
               Add folder
             </button>

@@ -71,7 +71,6 @@ class AddNote extends Component {
   }
 
   validateName() {
-    console.log(this.state.name)
     const name = this.state.name;
     if (name.length === 0) {
       return 'Name is required';
@@ -124,7 +123,8 @@ class AddNote extends Component {
               type='submit' 
               onClick={e => this.handleSubmit(e)}
               disabled = {
-                this.validateName()
+                this.validateName(),
+                !!nameError
               }
             >
               Add note

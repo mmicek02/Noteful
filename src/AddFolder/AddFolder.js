@@ -58,9 +58,6 @@ class AddFolder extends Component {
     })
 }
     validateName() {
-      console.log(this.state.folderName);
-      console.log(this.state.folderName.value);
-      console.log(this.state.folderName.value.trim());  
       const name = this.state.folderName.value.trim();
         if (name.length === 0) {
           return 'Name is required';
@@ -91,7 +88,8 @@ class AddFolder extends Component {
               type='submit' 
               onClick={e => this.handleSubmit(e)}
               disabled = {
-                this.validateName()
+                this.validateName(),
+                !!nameError
               }
             >
               Add folder

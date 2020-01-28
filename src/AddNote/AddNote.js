@@ -79,8 +79,16 @@ class AddNote extends Component {
     }
   }
 
+  validateFolder() {
+    const folder = this.state.folderId;
+    if(folder === '') {
+      return 'You must choose a folder';
+    }
+  }
+
   render() {
     const nameError = this.validateName();
+    const folderError = this.validateFolder();
     return (
       <section className='AddNote'>
         <h2>Create a note</h2>
@@ -117,6 +125,7 @@ class AddNote extends Component {
                   <option key={folderName.id} value={folderName.id}>{folderName.name}</option>
                 )}
             </select>
+            {<ValidationError message={folderError} />}
           </div>
           <div className='buttons'>
             <button 
@@ -124,6 +133,7 @@ class AddNote extends Component {
               onClick={e => this.handleSubmit(e)}
               disabled = {
                 this.validateName(),
+                this.validateFolder(),
                 !!nameError
               }
             >
@@ -137,3 +147,9 @@ class AddNote extends Component {
 }
 
 export default AddNote;
+
+AddNote.PropTypes = {
+  name: PropTypes.string.isRequired,
+  folderId: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired
+};

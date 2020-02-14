@@ -47,7 +47,7 @@ class AddNote extends Component {
       modified: new Date,
     }
 
-    const url ='http://localhost:8000/notes/';
+    const url ='http://localhost:8000/notes';
     const options = {
         method: 'POST',
         headers: {

@@ -16,7 +16,7 @@ class AddFolder extends Component {
                 touched: false
             }
         }
-    }
+    } 
 
     updateFolderName(folderName) {
         this.setState({
@@ -32,7 +32,7 @@ class AddFolder extends Component {
         const folderInfo = {
           name: this.state.folderName.value
         }
-        const url = 'http://localhost:9090/folders';
+        const url = 'http://localhost:8000/folders';
         const options = {
             method: 'POST',
             headers: {

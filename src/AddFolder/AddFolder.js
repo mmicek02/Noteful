@@ -32,7 +32,7 @@ class AddFolder extends Component {
         const folderInfo = {
           name: this.state.folderName.value
         }
-        const url = 'http://localhost:8000/folders';
+        const url = 'https://rocky-falls-33917.herokuapp.com/folders';
         const options = {
             method: 'POST',
             headers: {
